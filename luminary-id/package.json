@@ -1,0 +1,37 @@
+{
+  "name": "luminary-id",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.14",
+    "@tsconfig/svelte": "^5.0.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "svelte-check": "^4.1.4",
+    "tailwindcss": "^4.0.14",
+    "typescript": "~5.7.2"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.7.0",
+    "@midnight-ntwrk/ledger": "^3.0.6",
+    "@midnight-ntwrk/midnight-js-contracts": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-network-id": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "^0.2.5",
+    "@midnight-ntwrk/midnight-js-types": "^0.2.5",
+    "@midnight-ntwrk/zswap": "^3.0.6",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "svelte": "^4.2.19",
+    "svelte-routing": "^2.13.0",
+    "vite": "^5.4.14"
+  }
+}

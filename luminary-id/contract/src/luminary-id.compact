@@ -1,0 +1,55 @@
+pragma language_version >= 0.14.0;
+
+import CompactStandardLibrary;
+
+// Define states for age verification
+export enum VERIFICATION_STATUS { unverified, verified }
+
+// Public ledger state
+export ledger status: VERIFICATION_STATUS;
+export ledger verifier_token: Bytes<32>;
+export ledger instance: Counter;
+
+// Constructor initializes public state
+constructor() {
+    status = VERIFICATION_STATUS.unverified;
+    instance.increment(1);
+}
+
+// Witness to access private age data
+witness get_user_age(): Uint<8>;
+witness get_secret_key(): Bytes<32>;
+
+// Register identity and verify age
+export circuit verify_age(min_age: Uint<8>): [] {
+    const user_age = get_user_age();
+    const sk = get_secret_key();
+    
+    // Assert user is at least the minimum age
+    assert user_age >= min_age
+        "User does not meet minimum age requirement";
+    
+    // Set verification status and store a token
+    status = VERIFICATION_STATUS.verified;
+    verifier_token = disclose(create_verification_token(sk, instance as Field as Bytes<32>));
+}
+
+// Helper circuit to create verification token
+export circuit create_verification_token(sk: Bytes<32>, instance: Bytes<32>): Bytes<32> {
+    return persistent_hash<Vector<3, Bytes<32>>>([
+        pad(32, "luminary-id:verification:"),
+        instance,
+        sk
+    ]);
+}
+
+// Check if user's age verification is valid
+export circuit is_verified(): Boolean {
+    const sk = get_secret_key();
+    const token = create_verification_token(sk, instance as Field as Bytes<32>);
+    
+    // Use disclose() to explicitly mark that we're intentionally revealing
+    // the result of this comparison, but not the underlying private data
+    return disclose(status == VERIFICATION_STATUS.verified && 
+                    verifier_token == token);
+}

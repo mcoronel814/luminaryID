@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.cjs",
+  "sourceRoot": "",
+  "sources": ["/home/twcoronel/mnight/masters/luminaryID/luminary-id/contract/src/luminary-id.compact", "compiler/standard-library.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAaA;;;;;;;;;;;;MAUA,AAAA,UAWC;;;;cAXyB,SAAgB;;;;;;;;;;;;;;;;yCAAhB,SAAgB;;;;;;;;;6CAAhB,SAAgB;;;OAWzC;MAGD,AAAA,yBAMC;;;;cANwC,IAAa;cAAE,UAAmB;;;;;;;;;;;;;;;;;;;;;;yCAAlC,IAAa,+BAAE,UAAmB;;;;;;;;;4DAAlC,IAAa;4DAAE,UAAmB;;;OAM1E;MAGD,AAAA,WAQC;;;;;;;;;;;;;;;;;;;;OAAA;;;;;;GAtCA;EAHD;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IALA;;;;;;;;;uDAA0C;IAC1C;;;;;;;;;uDAAwC;IACxC;;;;;;;;;uDAAgC;IAI5B;;;;;;;;;uDAAM;UACN,KAAQ;IAAR;;;;;;;;;;2EAAA,KAAQ;;;;sDAAA;;;;;;;GACX;ECYD,AAAA,+CAAkC;oEAAA;;;EDTlC,AAAA,gBAAgC;;0DAAhC,YAAgC;;;;;;;;;;;;;GAAA;EAChC,AAAA,kBAAoC;;0DAApC,cAAoC;;;;;;;;;;;;;GAAA;EAGpC,AAAA,cAWC,4BAXyB,SAAgB;UACtC,UAAgC;UAChC,IAA4B;8BAGrB,UAAQ,GAAI,SAAO;;IAI1B;;;;;;;;;uDAAM;UACN,KAAc;;qDAAsC,IAAE;;2HAAE;;;;;;;;;;;8KAAQ;IAAhE;;;;;;;yGAAA,KAAc;;uDAAA;;GACjB;EAGD,AAAA,6BAMC,4BANwC,IAAa,EAAE,UAAmB;;;;qCAGnE,UAAQ;qCACR,IAAE;GAET;EAGD,AAAA,eAQC;UAPG,IAA4B;UAC5B,OAA4E;;uDAApC,IAAE;;6HAAE;;;;;;;;;;;gLAAQ;mCAIpC;;;;;;;;;;;sFAAM;;;;kDACN;;;;;;;;;;;qGAAc;0BAAI,OAAK;GAC1C;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;IA9CD;qCAAA;;;;;;;;;;;wFAA0C;KAAA;IAC1C;qCAAA;;;;;;;;;;;wFAAwC;KAAA;IACxC;qCAAA;;;;;;;;;;;wFAAgC;KAAA;;;;;;;;;;;;;;;;;;"
+}
