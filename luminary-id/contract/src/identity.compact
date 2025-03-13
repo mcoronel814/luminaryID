@@ -1,0 +1,152 @@
+pragma language_version >= 0.14.0;
+
+import CompactStandardLibrary;
+
+// Define the structure for identity attributes
+struct IdentityAttribute {
+  name: Bytes<32>;
+  value: Bytes<64>;
+  isPublic: Boolean;
+}
+
+// Define the state of the Identity
+export enum IDENTITY_STATE { ACTIVE, REVOKED }
+
+// Public ledger state
+export ledger identities: Map<Bytes<32>, IDENTITY_STATE>; // Maps identity hash to state
+export ledger publicAttributes: Map<Bytes<32>, Map<Bytes<32>, Bytes<64>>>; // Maps identity hash to attribute name to value for public attributes
+export ledger ownershipProofs: Set<Bytes<32>>; // Set of valid ownership proofs
+export ledger round: Counter;
+
+constructor() {
+  round.increment(1);
+}
+
+// Private state access
+witness local_secret_key(): Bytes<32>;
+
+// Create a new identity
+export circuit createIdentity(attributes: Vector<10, IdentityAttribute>): Bytes<32> {
+  const sk = local_secret_key();
+  const identity_hash = identity_key(sk, round as Field as Bytes<32>);
+  
+  assert !identities.member(identity_hash)
+    "Identity already exists";
+  
+  // Store the identity state
+  identities.insert(identity_hash, IDENTITY_STATE.ACTIVE);
+  
+  // Initialize the public attributes map
+  publicAttributes.insert(identity_hash, default<Map<Bytes<32>, Bytes<64>>>);
+  
+  // Process attributes
+  for (const i of 0..10) {
+    if (attributes[i].name.length > 0) {
+      if (attributes[i].isPublic) {
+        // Store public attributes in the ledger
+        publicAttributes.lookup(identity_hash).insert(attributes[i].name, attributes[i].value);
+      }
+      // Private attributes are not stored on-chain - they remain in the DApp's private state
+    }
+  }
+  
+  // Generate an ownership proof and add it to the set
+  const ownership_proof = generate_ownership_proof(sk, identity_hash);
+  ownershipProofs.insert(disclose(ownership_proof));
+  
+  // Increment round counter to prevent linkability in future identities
+  round.increment(1);
+  
+  return identity_hash;
+}
+
+// Update an identity's attributes
+export circuit updateIdentity(identity_hash: Bytes<32>, attributes: Vector<10, IdentityAttribute>): [] {
+  const sk = local_secret_key();
+  
+  // Verify ownership through proof verification
+  assert ownershipProofs.member(generate_ownership_proof(sk, identity_hash))
+    "Not authorized to update this identity";
+  
+  assert identities.member(identity_hash)
+    "Identity does not exist";
+    
+  assert identities.lookup(identity_hash) == IDENTITY_STATE.ACTIVE
+    "Identity is not active";
+  
+  // Process attributes updates
+  for (const i of 0..10) {
+    if (attributes[i].name.length > 0) {
+      if (attributes[i].isPublic) {
+        // Update public attributes in the ledger
+        publicAttributes.lookup(identity_hash).insert(attributes[i].name, attributes[i].value);
+      }
+      // Private attributes updates are handled client-side
+    }
+  }
+}
+
+// Revoke an identity
+export circuit revokeIdentity(identity_hash: Bytes<32>): [] {
+  const sk = local_secret_key();
+  
+  // Verify ownership through proof verification
+  assert ownershipProofs.member(generate_ownership_proof(sk, identity_hash))
+    "Not authorized to revoke this identity";
+  
+  assert identities.member(identity_hash)
+    "Identity does not exist";
+    
+  assert identities.lookup(identity_hash) == IDENTITY_STATE.ACTIVE
+    "Identity is already revoked";
+  
+  // Update the identity state to revoked
+  identities.insert(identity_hash, IDENTITY_STATE.REVOKED);
+}
+
+// Helper to verify identity
+export circuit verifyIdentity(identity_hash: Bytes<32>): Boolean {
+  if (!identities.member(identity_hash)) {
+    return false;
+  }
+  return identities.lookup(identity_hash) == IDENTITY_STATE.ACTIVE;
+}
+
+// Helper to get a public attribute
+export circuit getPublicAttribute(identity_hash: Bytes<32>, attribute_name: Bytes<32>): Maybe<Bytes<64>> {
+  if (!identities.member(identity_hash)) {
+    return none<Bytes<64>>();
+  }
+  
+  if (identities.lookup(identity_hash) != IDENTITY_STATE.ACTIVE) {
+    return none<Bytes<64>>();
+  }
+  
+  if (!publicAttributes.member(identity_hash)) {
+    return none<Bytes<64>>();
+  }
+  
+  if (!publicAttributes.lookup(identity_hash).member(attribute_name)) {
+    return none<Bytes<64>>();
+  }
+  
+  return some<Bytes<64>>(publicAttributes.lookup(identity_hash).lookup(attribute_name));
+}
+
+// Helper function to generate identity key
+circuit identity_key(sk: Bytes<32>, round: Bytes<32>): Bytes<32> {
+  return persistent_hash<Vector<3, Bytes<32>>>([
+    pad(32, "luminary:id:"),
+    round,
+    sk
+  ]);
+}
+
+// Generate an ownership proof that can be verified later
+circuit generate_ownership_proof(sk: Bytes<32>, identity_hash: Bytes<32>): Bytes<32> {
+  return persistent_hash<Vector<3, Bytes<32>>>([
+    pad(32, "luminary:proof:"),
+    identity_hash,
+    sk
+  ]);
+}
