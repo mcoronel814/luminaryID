@@ -1,0 +1,24 @@
+/* src/app.css */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-cyberGray-900 text-white font-cyber;
+}
+
+.cyber-button {
+  @apply bg-cyberBlue text-cyberGray-900 font-bold py-2 px-4 rounded-none shadow-cyber transition-all duration-300;
+}
+
+.cyber-button:hover { @apply bg-cyberBlue/80; }
+
+.cyber-input {
+  @apply bg-cyberGray-800 text-white p-2 rounded-none border border-cyberGray-600 focus:outline-none focus:border-cyberBlue;
+}
+
+.cyber-card {
+  @apply bg-gradient-to-br from-cyberGray-800 to-cyberGray-700 p-6 rounded-none shadow-lg;
+}

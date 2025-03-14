@@ -1,0 +1,23 @@
+{
+  "name": "luminary-id-poc",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Proof of Concept for LuminaryID DApp with Cybertruck-inspired design",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "svelte": "^4.2.18",
+    "tailwindcss": "^3.4.10"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "typescript": "^5.5.3",
+    "vite": "^5.0.0"
+  }
+}
