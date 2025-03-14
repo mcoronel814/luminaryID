@@ -6,19 +6,26 @@
 @tailwind utilities;
 
 body {
-  @apply bg-cyberGray-900 text-white font-cyber;
+  @apply bg-cyberGray-900 text-white font-orbitron;
 }
 
 .cyber-button {
-  @apply bg-cyberBlue text-cyberGray-900 font-bold py-2 px-4 rounded-none shadow-cyber transition-all duration-300;
+  @apply bg-cyberPurple text-white font-bold py-2 px-4 rounded-none shadow-cyber transition-all duration-300;
 }
 
-.cyber-button:hover { @apply bg-cyberBlue/80; }
+.cyber-button:hover { @apply bg-cyberPurple/80; }
 
 .cyber-input {
   @apply bg-cyberGray-800 text-white p-2 rounded-none border border-cyberGray-600 focus:outline-none focus:border-cyberBlue;
 }
 
 .cyber-card {
-  @apply bg-gradient-to-br from-cyberGray-800 to-cyberGray-700 p-6 rounded-none shadow-lg;
+  @apply bg-cyberGray-800 p-6 rounded-none shadow-lg;
+}
+
+.cyber-glow { @apply shadow-cyber; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
