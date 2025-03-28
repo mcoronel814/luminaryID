@@ -1,0 +1,85 @@
+pragma language_version >= 0.14.0;
+
+import CompactStandardLibrary;
+
+// --- Data Structures ---
+// Using Boolean directly in Map for now
+// struct IdentityData {
+//  testField: Boolean
+// }
+
+// --- Ledger State ---
+
+// *** HEAVILY SIMPLIFIED Map type for testing ***
+export ledger identities: Map<Field, Boolean>; // Using Field and Boolean
+export ledger nonceCounter: Counter;
+
+// --- Witnesses ---
+// Keep witnesses declared, even if not fully used in simplified circuits
+witness local_secret_key(): Bytes;
+// witness get_identity_attribute(attribute_name_bytes: Bytes): Bytes; // Commented out for now
+// witness get_attribute_nonce(attribute_name_bytes: Bytes): Bytes; // Commented out for now
+
+
+// --- Constructor ---
+constructor() {
+  // Initializes empty map implicitly
+}
+
+// --- Helper Circuits ---
+
+// Keep helper, although input type might mismatch Map key type now
+circuit derive_public_identifier(sk: Bytes): Bytes {
+    return persistent_hash<Vector<2, Bytes>>([
+        pad(32, "LuminaryID:pubId:"),
+        sk
+    ]);
+}
+
+// --- Exported Circuits (Entry Points) ---
+
+// Simplified register - uses Field key (e.g., hash degraded) and Boolean value
+export circuit registerIdentity(): [] {
+    const sk = local_secret_key();
+    // Convert Bytes hash to Field for the Map key
+    const pubIdHash = derive_public_identifier(sk);
+    const pubIdField = degrade_to_transient(pubIdHash); // Convert hash to Field
+
+    assert !identities.member(pubIdField)
+        "Identity already registered for this key.";
+
+    // Insert simple boolean value
+    identities.insert(pubIdField, true);
+}
+
+// Simplified getPublicData - uses Field key
+export circuit getPublicData(pubIdField: Field): Boolean {
+    return identities.member(pubIdField); // Just check membership
+}
+
+
+// --- Commented out potentially complex circuits for this test ---
+/*
+// Simplified update - uses Field key, toggles boolean
+export circuit updateAttribute(pubIdField: Field): [] {
+    assert identities.member(pubIdField)
+        "Identity not found for update.";
+
+    const currentValue = identities.lookup(pubIdField);
+    identities.insert(pubIdField, !currentValue);
+}
+
+
+// Simplified prove - uses Field key, checks boolean value
+export circuit proveAttributeValue(
+    pubIdField: Field,
+    value_to_prove: Boolean
+    ): Boolean {
+    assert identities.member(pubIdField)
+        "Identity not found for proof.";
+
+    const actualValue = identities.lookup(pubIdField);
+    const proofCheck = (actualValue == value_to_prove);
+    return proofCheck;
+}
+*/
